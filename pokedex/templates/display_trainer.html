@@ -1,17 +1,37 @@
 {% extends "base.html" %}
-{% block title %}{{ trainer | capfirst }}{% endblock title %}
+{% block title %}{{ trainer.first_name }} {{ trainer.last_name }}{% endblock title %}
 {% block content %}
-            <h3>{{ trainer | capfirst }}</h3>
-            <h3>Detalles del Entrenador:</h3>
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <strong>Nivel:</strong> {{ trainer.level | capfirst }}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h3>{{ trainer.first_name }} {{ trainer.last_name }}</h3>
+            <p class="text-muted">Entrenador</p>
+        </div>
+        <div>
+            <a href="{% url 'pokedex:edit_trainer' trainer.id %}" class="btn btn-primary me-2">Editar</a>
+            <a href="{% url 'pokedex:delete_trainer' trainer.id %}" class="btn btn-danger">Eliminar</a>
+        </div>
+    </div>
+
+    <h4>Detalles del entrenador</h4>
+    <ul class="list-group mb-4">
+        <li class="list-group-item"><strong>Nombre:</strong> {{ trainer.first_name }} {{ trainer.last_name }}</li>
+        <li class="list-group-item"><strong>Fecha de nacimiento:</strong> {{ trainer.birth_date }}</li>
+        <li class="list-group-item"><strong>Nivel:</strong> {{ trainer.level }}</li>
+    </ul>
+
+    <h4>Pokemons asignados</h4>
+    {% if pokemons %}
+        <ul class="list-group">
+            {% for pokemon in pokemons %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>{{ pokemon.name }}</span>
+                    <a href="{% url 'pokedex:pokemon' pokemon.id %}" class="btn btn-sm btn-outline-primary">Ver</a>
                 </li>
-                <li class="list-group-item">
-                    <strong>Fecha de Nacimiento:</strong> {{ traner.birth_date | capfirst }}
-                </li>
-                <li class="list-group-item">
-                    <strong>Nombre:</strong> f"{{ trainer.first_name }} {{trainer.last_name }}"
-                </li>
-            </ul>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-muted">Este entrenador no tiene pokemons asignados.</p>
+    {% endif %}
+
+    <a href="{% url 'pokedex:index' %}" class="btn btn-dark mt-3">Regresar</a>
 {% endblock content %}
